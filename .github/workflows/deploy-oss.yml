@@ -11,6 +11,7 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: prod # 就是你刚建的这个环境名
     env:
       APP_NAME: ${{ inputs.APP_NAME }}
       BASE_ROOT: https://lf-frontend.oss-cn-beijing.aliyuncs.com
