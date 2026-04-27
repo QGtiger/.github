@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_NAME: ${{ inputs.APP_NAME }}
+      BASE_ROOT: https://lf-frontend.oss-cn-beijing.aliyuncs.com
 
     steps:
       - name: Checkout code
@@ -39,7 +40,7 @@ jobs:
 
       - name: Build
         env:
-          BASE_ROOT: ${{ vars.BASE_URL }}
+          BASE_ROOT: ${{ env.BASE_ROOT }}
           APP_NAME: ${{ env.APP_NAME }}
           BUILD_VERSION: ${{ steps.version.outputs.version }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -73,7 +74,7 @@ jobs:
           HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           APP_NAME: ${{ env.APP_NAME }}
           BUILD_VERSION: ${{ steps.version.outputs.version }}
-          BASE_ROOT: ${{ vars.BASE_URL }}
+          BASE_ROOT: ${{ env.BASE_ROOT }}
         run: |
           set -e
           if [ -z "${DEPLOY_API_URL}" ]; then
@@ -82,7 +83,7 @@ jobs:
           fi
           ROOT="${BASE_ROOT%/}"
           if [ -z "$ROOT" ]; then
-            echo "Error: 需要配置 vars.BASE_URL 以生成 ossIndexUrl"
+            echo "Error: BASE_ROOT 为空，无法生成 ossIndexUrl"
             exit 1
           fi
           OSS_INDEX_URL="${ROOT}/${APP_NAME}/${BUILD_VERSION}/index.html"
